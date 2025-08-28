@@ -1,0 +1,103 @@
+.widgetContainer {
+  padding: 24px;
+  width: 500px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  background-color: white;
+  border-radius: 12px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+
+
+  // display: ;
+
+
+  .widgetHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+
+    .widgetCloseButton {
+      cursor: pointer;
+    }
+  }
+
+  .widgetFeatures {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    height: 40px;
+  }
+
+  .widgetSelectedItems {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 16px;
+    height: 70px;
+    .widgetTagsContainer {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding-top: 8px;
+    }
+  }
+
+  .widgetOptionsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 280px;
+    overflow-y: auto;
+    margin-top: 16px;
+    background-color: var(--light-gray);
+    // border-radius: 12px;
+    padding: 12px;
+
+    .widgetOption {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 4px;
+    };
+  }
+
+  .widgetFooter {
+    display: flex;
+    justify-content: flex-start;
+    gap: 12px;
+    padding-top: 16px;
+    // bottom: 0;
+    // position: sticky;
+  }
+
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  // backdrop-filter: blur(1px);
+
+  //  background-color: rgb(0,0,0); /* Fallback color */
+  // background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.featureContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
