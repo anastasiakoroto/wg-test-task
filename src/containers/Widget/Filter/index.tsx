@@ -12,7 +12,11 @@ const Filter: FC<FilterProps> = ({ value, onChange }) => {
   return (
     <div className={styles.featureContainer}>
       Filter
-      <select value={value} onChange={onChange}>
+      <select
+        className={styles.filterSelect}
+        value={value}
+        onChange={onChange}
+      >
         {FILTER_OPTIONS.map(option => (
           <option key={option.key} value={option.value}>
             {option.label}

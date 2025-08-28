@@ -2,10 +2,20 @@
   margin: 24px;
   text-align: flex-start;
 
+  .selectedTags {
+    height: 120px;
+  }
+
   .tags {
     display: flex;
     gap: 8px;
     margin-top: 12px;
     margin-bottom: 24px;
+  }
+
+  .tagCount {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--cambridge-blue)
   }
 }

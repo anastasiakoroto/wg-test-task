@@ -12,12 +12,12 @@ const Search: FC<SearchProps> = ({ value, onChange }) => {
     <div className={styles.featureContainer}>
       Search
       <input 
-        type="text" 
-        id="search" 
-        // min={1} 
-        // max={9}
-        value={value} 
-        onChange={onChange} 
+        id="search"
+        className={styles.searchInput}
+        type="text"
+        placeholder="Element search"
+        value={value}
+        onChange={onChange}
       />
     </div>
   );

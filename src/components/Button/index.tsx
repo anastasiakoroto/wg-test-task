@@ -1,4 +1,5 @@
 import type { FC } from "react";
+
 import styles from "./Button.module.scss";
 
 interface ButtonProps {
@@ -11,12 +12,12 @@ interface ButtonProps {
 const Button: FC<ButtonProps> = ({ isPrimary, isSmall, text, onClick }) => {
   return (
     <button
-      className={styles.buttonContainer}
+      className={`
+        ${styles.buttonContainer}
+        ${isPrimary ? styles.primary : styles.secondary}
+        ${isSmall ? styles.small : styles.large}
+      `}
       key={text} // can be with spaces?
-      style={{
-        backgroundColor: isPrimary ? "#729B79" : "#475B63",
-        width: isSmall ? "100px" : "200px",
-      }}
       onClick={onClick}
     >
       {text}

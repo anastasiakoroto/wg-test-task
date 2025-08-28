@@ -9,4 +9,29 @@
   font-family: 'Manrope';
   font-weight: 500;
   border-radius: 8px;
+
+  &.primary {
+    background-color: var(--cambridge-blue);
+    &:hover {
+      background-color: #63876A;
+    }
+    &:active {
+      background-color: #53725A;
+    }
+  }
+  &.secondary {
+    background-color: var(--paynes-gray);
+    &:hover {
+      background-color: #3E4E56;
+    }
+    &:active {
+      background-color: #344148;
+    }
+  }
+  &.small {
+    width: 100px;
+  }
+  &.large {
+    width: 200px;
+  }
 }
