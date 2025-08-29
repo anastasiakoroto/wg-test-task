@@ -13,19 +13,19 @@
   &.primary {
     background-color: var(--cambridge-blue);
     &:hover {
-      background-color: #63876A;
+      background-color: var(--primary-hover);
     }
     &:active {
-      background-color: #53725A;
+      background-color: var(--primary-active);
     }
   }
   &.secondary {
     background-color: var(--paynes-gray);
     &:hover {
-      background-color: #3E4E56;
+      background-color: var(--secondary-hover);
     }
     &:active {
-      background-color: #344148;
+      background-color: var(--secondary-active);
     }
   }
   &.small {
