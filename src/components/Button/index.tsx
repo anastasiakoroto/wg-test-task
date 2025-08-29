@@ -3,13 +3,13 @@ import type { FC } from "react";
 import styles from "./Button.module.scss";
 
 interface ButtonProps {
-  text: string;
+  children: React.ReactNode;
   onClick: () => void;
   isPrimary?: boolean;
   isSmall?: boolean;
 }
 
-const Button: FC<ButtonProps> = ({ isPrimary, isSmall, text, onClick }) => {
+const Button: FC<ButtonProps> = ({ isPrimary, isSmall, children, onClick }) => {
   return (
     <button
       className={`
@@ -17,10 +17,9 @@ const Button: FC<ButtonProps> = ({ isPrimary, isSmall, text, onClick }) => {
         ${isPrimary ? styles.primary : styles.secondary}
         ${isSmall ? styles.small : styles.large}
       `}
-      key={text} // can be with spaces?
       onClick={onClick}
     >
-      {text}
+      {children}
     </button>
   );
 };

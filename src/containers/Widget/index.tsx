@@ -1,49 +1,54 @@
-import React, { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { FC } from 'react';
+import { observer } from 'mobx-react-lite';
+import { reaction } from 'mobx';
 
 import Search from './Search';
 import Filter from './Filter';
 import { FILTER_OPTIONS } from './Filter/config';
 import Header from './Header';
 import Footer from './Footer';
-
-import Tag from '../../components/Tag';
-import styles from './Widget.module.scss';
-import type { Tag as TagType } from '../../types/widget-types';
 import Tags from './Tags';
-
-
-
+import type { Tag as TagType } from '../../types/widget-types';
+import { activeTagsStore, elementsStore } from '../../stores/store';
+import styles from './Widget.module.scss';
 
 interface WidgetProps {
-  activeTags: TagType[];
   isOpen: boolean;
   onClose: () => void;
   onSave: (widgetTags: TagType[]) => void;
 }
 
-const Widget: FC<WidgetProps> = ({ activeTags, isOpen, onClose, onSave }) => {
-  const [searchValue, setSearchValue] = React.useState<string>('');
-  const [filterValue, setFilterValue] = React.useState<string>(FILTER_OPTIONS[0].value);
-  const [widgetTags, setWidgetTags] = React.useState<TagType[]>(activeTags);
+const Widget: FC<WidgetProps> = observer(({ isOpen, onClose, onSave }) => {
+  const [searchValue, setSearchValue] = useState<string>('');
+  const [filterValue, setFilterValue] = useState<string>(FILTER_OPTIONS[0].value);
+  const [widgetTags, setWidgetTags] = useState<TagType[]>(activeTagsStore.activeTags);
+
+  useEffect(() => {
+    // Subscribe to changes in activeTagsStore.activeTags to keep widgetTags in sync
+    const disposer = reaction(() => activeTagsStore.activeTags, (newActiveTags) => {
+      setWidgetTags(newActiveTags);
+    });
+
+    return () => {
+      setSearchValue('');
+      setFilterValue(FILTER_OPTIONS[0].value);
+      setWidgetTags(activeTagsStore.activeTags);
+      disposer();
+   };
+  }, []);
 
   const generateOptions = useCallback(() => {
-    const elements = [];
-    for (let i = 0; i < 300; i++) {
-      const elementNumber = i + 1;
-      const label = `Element ${elementNumber}`;
-      if (
-        (filterValue !== "-1" && elementNumber <= parseInt(filterValue)) ||
-        (searchValue && !label.toLowerCase().includes(searchValue.toLowerCase()))
-      ) {
-        continue;
-      }
-      elements.push({ value: i.toString(), label: `Element ${i + 1}`});
-    }
+    const elements = elementsStore.elements
+      .filter(element => 
+        (filterValue === "-1" || element.value > parseInt(filterValue)) &&
+        (!searchValue || element.label.toLowerCase().includes(searchValue.toLowerCase()))
+      )
+      .map(element => ({ value: element.value.toString(), label: element.label }));
     return elements;
   }, [filterValue, searchValue]);
 
-  const onCheckboxChange = ({ value, label }: TagType) => {
+  const onItemChange = ({ value, label }: TagType) => {
     if (widgetTags.find(tag => tag.value === value)) {
       setWidgetTags(prev => prev.filter(tag => tag.value !== value));
     } else {
@@ -51,43 +56,47 @@ const Widget: FC<WidgetProps> = ({ activeTags, isOpen, onClose, onSave }) => {
     }
   };
 
-  const onCrossClick = () => {
+  const onCancel = () => {
     setSearchValue('');
     setFilterValue(FILTER_OPTIONS[0].value);
-    setWidgetTags(activeTags);
+    setWidgetTags(activeTagsStore.activeTags);
     onClose();
   };
 
   return isOpen && (
     <>
       <div className={styles.widgetContainer}>
-        <Header onClose={onCrossClick} />
+        <Header onClose={onCancel} />
         <div className={styles.widgetFeatures}>
           <Search value={searchValue} onChange={e => setSearchValue(e.target.value)} />
           <Filter value={filterValue} onChange={e => setFilterValue(e.target.value)} />
         </div>
         <div className={styles.widgetOptionsContainer}>
-        {generateOptions().map(option => (
+        {generateOptions().map(option => {
+          const selectedTag = widgetTags.find(tag => tag.value === option.value);
+          return (
             <div key={option.value} className={styles.widgetOption}>
               <input
+                id={`checkbox-${option.value}`}
+                type="checkbox"
                 className={styles.widgetCheckbox}
-                checked={!!widgetTags.find(tag => tag.value === option.value)}
-                type="checkbox" 
-                id={option.value} 
+                checked={!!selectedTag}
+                disabled={widgetTags.length === 3 && !selectedTag}
                 value={option.value}
-                onChange={() => onCheckboxChange(option)}
-                disabled={widgetTags.length === 3 && !widgetTags.find(tag => tag.value === option.value)} 
+                onChange={() => onItemChange(option)}
               />
-              <span>{option.label}</span>
+              <label htmlFor={`checkbox-${option.value}`}>{option.label}</label>
             </div>
-        ))} 
+          );
+        })} 
         </div>
-        <Tags tags={widgetTags} onClose={onCheckboxChange} />
-        <Footer onClose={onCrossClick} onSave={() => onSave(widgetTags)}  />
+        <Tags tags={widgetTags} onClose={onItemChange} />
+        <Footer onClose={onCancel} onSave={() => onSave(widgetTags)}  />
       </div>
-      <div className={styles.overlay} onClick={onClose}></div>
+      {/* The logic below was added based on default projects requirements */}
+      <div className={styles.overlay} onClick={onCancel} />
     </>
   );
-}
+});
 
 export default Widget;

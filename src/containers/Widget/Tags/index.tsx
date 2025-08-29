@@ -10,7 +10,8 @@ const Tags = (
     Current selected items:
     <div className={styles.widgetTagsContainer}>
       {tags.map(tag => (
-        <Tag 
+        <Tag
+          key={`widget-tag-${tag.value}`}
           label={tag.label} 
           value={tag.value} 
           onClose={() => onClose(tag)} 

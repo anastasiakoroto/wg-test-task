@@ -1,23 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { observer } from 'mobx-react-lite';
 
 import Tag from '../../components/Tag';
 import Button from '../../components/Button';
 import Widget from '../Widget';
-import type { Tag as TagType } from '../../types/widget-types';
+import { activeTagsStore } from '../../stores/store';
 import styles from './App.module.scss';
 
-const App = () => {
-  const [tagCount, setTagCount] = useState(0);
+const App = observer(() => {
   const [isWidgetOpen, setIsWidgetOpen] = useState(false);
-  const [tags, setTags] = useState<TagType[]>([]);
-
-  useEffect(() => {
-    setTagCount(tags.length);
-  }, [tags]);
-
-  const onTagClose = (value: string) => {
-    setTags(prev => prev.filter(item => item.value !== value));
-  };
 
   const onWidgetClose = () => {
     setIsWidgetOpen(false);
@@ -31,29 +22,35 @@ const App = () => {
           <h3>
             You currently have
             {' '}
-            <span className={styles.tagCount}>{tagCount}</span>
+            <span className={styles.tagCount}>{activeTagsStore.activeTagsCount}</span>
             {' '}
-            selected items
+            selected {activeTagsStore.activeTagsCount === 1 ? 'item' : 'items'}
           </h3>
           <div className={styles.tags}>
-            {tags.map(tag => (
-              <Tag label={tag.label} value={tag.value} onClose={onTagClose} />
+            {activeTagsStore.activeTags.map(tag => (
+              <Tag 
+                key={`active-tag-${tag.value}`}
+                label={tag.label}
+                value={tag.value}
+                onClose={activeTagsStore.closeTag}
+              />
             ))}
           </div>
         </div>
-        <Button text="Change my choice" isPrimary onClick={() => setIsWidgetOpen(true)} />
+        <Button isPrimary onClick={() => setIsWidgetOpen(true)}>
+          Change my choice
+        </Button>
       </div>
       <Widget
-        activeTags={tags}
         isOpen={isWidgetOpen}
         onClose={onWidgetClose}
         onSave={tags => {
-          setTags(tags);
+          activeTagsStore.setActiveTags(tags);
           onWidgetClose();
         }}
       />
     </div>
   );
-}
+});
 
 export default App;
