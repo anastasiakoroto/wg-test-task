@@ -8,7 +8,7 @@ import { activeTagsStore } from '../../stores/store';
 import styles from './App.module.scss';
 
 const App = observer(() => {
-  const [isWidgetOpen, setIsWidgetOpen] = useState(false);
+  const [isWidgetOpen, setIsWidgetOpen] = useState<boolean>(false);
 
   const onWidgetClose = () => {
     setIsWidgetOpen(false);

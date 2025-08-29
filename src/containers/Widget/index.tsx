@@ -41,7 +41,7 @@ const Widget: FC<WidgetProps> = observer(({ isOpen, onClose, onSave }) => {
   const generateOptions = useCallback(() => {
     const elements = elementsStore.elements
       .filter(element => 
-        (filterValue === "-1" || element.value > parseInt(filterValue)) &&
+        (filterValue === FILTER_OPTIONS[0].value || element.value > parseInt(filterValue)) &&
         (!searchValue || element.label.toLowerCase().includes(searchValue.toLowerCase()))
       )
       .map(element => ({ value: element.value.toString(), label: element.label }));
